@@ -49,86 +49,146 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Search',
-                prefixIcon: Icon(Icons.search),
+            SizedBox(
+              width: 500,
+              child: TextField(
+                decoration: InputDecoration(
+                    labelText: 'Search',
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder()
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    searchKeyword = value.toLowerCase();
+                  });
+                },
               ),
-              onChanged: (value) {
-                setState(() {
-                  searchKeyword = value.toLowerCase();
-                });
-              },
             ),
-            SizedBox(height: 20),
+
+            SizedBox(height: 40),
             Form(
               key: _formKey,
-              child: Column(
-                children: [
-                  TextFormField(
-                    controller: _itemController,
-                    decoration: InputDecoration(labelText: 'Item'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter an item';
-                      }
-                      return null;
-                    },
+              child: Padding(
+                      padding: EdgeInsets.only(
+                        left: 100,
+                        right: 100
+                      ),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: 500,
+                              child: TextField(
+                                controller: _itemController,
+                                decoration: InputDecoration(
+                                  labelText: 'Item',
+                                  border: OutlineInputBorder(),
+                                ),
+                                onChanged: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    // Hiển thị thông báo lỗi hoặc xử lý lỗi tại đây
+                                    print('Please enter an item');
+                                  }
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              width: 500,
+                              child: TextField(
+                                controller: _itemNameController,
+                                decoration: InputDecoration(
+                                  labelText: 'Item Name',
+                                  border: OutlineInputBorder(),
+                                ),
+                                onChanged: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    // Hiển thị thông báo lỗi hoặc xử lý lỗi tại đây
+                                    print('Please enter an item');
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 20,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: 500,
+                              child: TextFormField(
+                                controller: _quantityController,
+                                decoration: InputDecoration(
+                                    labelText: 'Quantity',
+                                  border: OutlineInputBorder(),
+                                ),
+                                keyboardType: TextInputType.number,
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width: 200,
+                                  child: TextFormField(
+                                    controller: _priceController,
+                                    decoration: InputDecoration(labelText: 'Price',border: OutlineInputBorder(),),
+                                    keyboardType: TextInputType.number,
+                                  ),
+                                ),
+                                SizedBox(width: 100,),
+                                SizedBox(
+                                  width: 200,
+                                  child: TextFormField(
+                                    controller: _currencyController,
+                                    decoration: InputDecoration(labelText: 'Currency',border: OutlineInputBorder(),),
+                                  ),
+                                ),
+                              ],
+                            )
+
+                          ],
+                        ),
+                        SizedBox(height: 10,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            ElevatedButton(
+
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  setState(() {
+                                    dataList.add({
+                                      'id': dataList.length + 1,
+                                      'item': _itemController.text,
+                                      'item_name': _itemNameController.text,
+                                      'quantity': _quantityController.text,
+                                      'price': _priceController.text,
+                                      'currency': _currencyController.text,
+                                    });
+                                    _itemController.clear();
+                                    _itemNameController.clear();
+                                    _quantityController.clear();
+                                    _priceController.clear();
+                                    _currencyController.clear();
+                                  });
+                                }
+                              },
+                              child: Text('Add Item', style: TextStyle(color: Colors.deepOrange,),
+                            )
+                            )],
+                        ),
+                      ],
+                    )
                   ),
-                  TextFormField(
-                    controller: _itemNameController,
-                    decoration: InputDecoration(labelText: 'Item Name'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter an item name';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: _quantityController,
-                    decoration: InputDecoration(labelText: 'Quantity'),
-                    keyboardType: TextInputType.number,
-                  ),
-                  TextFormField(
-                    controller: _priceController,
-                    decoration: InputDecoration(labelText: 'Price'),
-                    keyboardType: TextInputType.number,
-                  ),
-                  TextFormField(
-                    controller: _currencyController,
-                    decoration: InputDecoration(labelText: 'Currency'),
-                  ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        setState(() {
-                          dataList.add({
-                            'id': dataList.length + 1,
-                            'item': _itemController.text,
-                            'item_name': _itemNameController.text,
-                            'quantity': _quantityController.text,
-                            'price': _priceController.text,
-                            'currency': _currencyController.text,
-                          });
-                          _itemController.clear();
-                          _itemNameController.clear();
-                          _quantityController.clear();
-                          _priceController.clear();
-                          _currencyController.clear();
-                        });
-                      }
-                    },
-                    child: Text('Add Item'),
-                  ),
-                ],
-              ),
+
             ),
             SizedBox(height: 20),
             Expanded(
               child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
+                scrollDirection: Axis.vertical,
                 child: DataTable(
                   columns: [
                     DataColumn(label: Text('ID')),
@@ -156,12 +216,6 @@ class _MyHomePageState extends State<MyHomePage> {
                       DataCell(
                         Row(
                           children: [
-                            IconButton(
-                              icon: Icon(Icons.edit),
-                              onPressed: () {
-                                // Add edit functionality here
-                              },
-                            ),
                             IconButton(
                               icon: Icon(Icons.delete),
                               onPressed: () {
